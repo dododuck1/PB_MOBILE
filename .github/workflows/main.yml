@@ -8,15 +8,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Setup NDK
-        uses: android-actions/setup-ndk@v2
-        with:
-          ndk-version: '17.2.4988734'  # เปลี่ยนเป็น NDK version ที่ต้องการ
+      - name: Install NDK
+        run: |
+          # ตั้งค่าตัวแปร NDK version
+          NDK_VERSION=21.3.6528147  # กำหนดเวอร์ชัน NDK ที่ต้องการ
+          wget https://dl.google.com/android/repository/android-ndk-r$NDK_VERSION-linux-x86_64.zip
+          unzip android-ndk-r$NDK_VERSION-linux-x86_64.zip -d $HOME/
+          echo "$HOME/android-ndk-r$NDK_VERSION" >> $GITHUB_PATH
 
       - name: List project directory
         run: |
@@ -29,8 +32,7 @@ jobs:
           ndk-build NDK_DEBUG=1  # ใช้ ndk-build พร้อมตัวเลือก debug
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ndk-build-artifacts
           path: path/to/your/folder/**  # ใช้ '**' เพื่อรวมทุกไฟล์ในโฟลเดอร์
-          
