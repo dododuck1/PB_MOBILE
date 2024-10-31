@@ -1,0 +1,36 @@
+name: Build and Upload NDK
+
+on:
+  push:
+    branches:
+      - main  # เปลี่ยนเป็น branch ที่ต้องการติดตาม
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup NDK
+        uses: android-actions/setup-ndk@v2
+        with:
+          ndk-version: '17.2.4988734'  # เปลี่ยนเป็น NDK version ที่ต้องการ
+
+      - name: List project directory
+        run: |
+          echo "Listing files in the project directory:"
+          ls -R path/to/your/project  # แสดงรายชื่อไฟล์และโฟลเดอร์ในโฟลเดอร์โปรเจค
+
+      - name: Build with NDK
+        run: |
+          cd path/to/your/project  # เปลี่ยนที่อยู่เป็นโฟลเดอร์ของโปรเจคของคุณ
+          ndk-build NDK_DEBUG=1  # ใช้ ndk-build พร้อมตัวเลือก debug
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ndk-build-artifacts
+          path: path/to/your/folder/**  # ใช้ '**' เพื่อรวมทุกไฟล์ในโฟลเดอร์
+          
